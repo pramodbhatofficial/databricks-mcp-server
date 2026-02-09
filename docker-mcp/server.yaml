@@ -1,0 +1,65 @@
+name: databricks-mcp-server
+image: mcp/databricks-mcp-server
+type: server
+
+meta:
+  category: cloud
+  tags:
+    - databricks
+    - cloud
+    - data
+    - sql
+    - mlops
+    - unity-catalog
+    - spark
+    - lakehouse
+    - vector-search
+    - mlflow
+
+about:
+  title: Databricks MCP Server
+  description: >
+    Comprehensive MCP server for Databricks providing 263 tools across 28 service
+    domains. Covers Unity Catalog, SQL, Compute, Jobs, Pipelines, Serving Endpoints,
+    Vector Search, Apps, Lakebase, Dashboards, Genie, Secrets, IAM, Experiments,
+    Delta Sharing, and more. Built on the official Databricks Python SDK for type
+    safety and automatic API freshness. Includes 8 prompt templates for guided
+    multi-step workflows and role-based tool presets for optimal agent performance.
+  icon: https://avatars.githubusercontent.com/u/4998052?s=200&v=4
+
+source:
+  project: https://github.com/pramodbhatofficial/databricks-mcp-server
+  commit: 4a3d80fbcc8f538449391f07bcb4c10480ff296c
+
+config:
+  description: Configure the connection to your Databricks workspace
+  secrets:
+    - name: databricks-mcp-server.databricks_token
+      env: DATABRICKS_TOKEN
+      example: dapi1234567890abcdef
+  env:
+    - name: DATABRICKS_HOST
+      example: https://your-workspace.databricks.com
+      value: "{{databricks-mcp-server.databricks_host}}"
+    - name: DATABRICKS_MCP_TOOLS_INCLUDE
+      example: unity_catalog,sql,compute,jobs
+      value: "{{databricks-mcp-server.tools_include}}"
+  parameters:
+    type: object
+    properties:
+      databricks_host:
+        type: string
+        description: Your Databricks workspace URL (e.g. https://adb-123.azuredatabricks.net)
+      tools_include:
+        type: string
+        description: >
+          Optional comma-separated list of tool modules to load.
+          Available: unity_catalog, sql, workspace, compute, jobs, pipelines,
+          serving, vector_search, apps, database, dashboards, genie, secrets,
+          iam, connections, experiments, sharing, files, grants, storage,
+          metastores, online_tables, global_init_scripts, tokens, git_credentials,
+          quality_monitors, command_execution, workflows.
+          Leave empty to load all 263 tools. Presets: data_engineer, ml_engineer,
+          platform_admin, app_developer, data_analyst, minimal.
+    required:
+      - databricks_host
