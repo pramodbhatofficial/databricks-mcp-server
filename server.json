@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.pramodbhatofficial/databricks-sdk-mcp",
   "title": "Databricks MCP Server",
-  "description": "Comprehensive MCP server for Databricks with 263 tools across 28 service domains. Covers Unity Catalog, SQL, Compute, Jobs, Pipelines, Serving, Vector Search, Apps, Lakebase, Dashboards, Genie, Secrets, IAM, Experiments, Delta Sharing, and more. Built on the official Databricks Python SDK.",
+  "description": "263 tools for Databricks: Unity Catalog, SQL, Compute, Jobs, Serving, and more.",
   "repository": {
     "url": "https://github.com/pramodbhatofficial/databricks-mcp-server",
     "source": "github"
