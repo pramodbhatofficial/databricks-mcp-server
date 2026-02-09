@@ -1,5 +1,7 @@
 # Databricks MCP Server
 
+<!-- mcp-name: io.github.pramodbhatofficial/databricks-sdk-mcp -->
+
 [![CI](https://github.com/pramodbhatofficial/databricks-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/pramodbhatofficial/databricks-mcp-server/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
@@ -21,7 +23,7 @@ Provides **263 tools** and **8 prompt templates** across 28 service domains, giv
 ### Installation
 
 ```bash
-pip install databricks-mcp-server
+pip install databricks-sdk-mcp
 ```
 
 Or run with Docker:
