@@ -8,16 +8,6 @@ A comprehensive [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
 
 Provides **263 tools** and **8 prompt templates** across 28 service domains, giving AI assistants full access to the Databricks platform.
 
-<p align="center">
-  <img src="assets/demo.gif" alt="Databricks MCP Server Demo" width="800">
-</p>
-
-<p align="center">
-  <em>Claude querying Unity Catalog, executing SQL, and managing clusters — all through MCP tools.</em>
-</p>
-
-> **Note:** To record your own demo, connect the server to Claude Code and ask it to explore your workspace. Use a screen recorder like [LICEcap](https://www.cockos.com/licecap/) (macOS/Windows) or [Peek](https://github.com/phw/peek) (Linux) to capture a GIF. Save it as `assets/demo.gif`.
-
 ## Features
 
 - **SDK-first**: Uses `databricks-sdk` for type safety and automatic API freshness
