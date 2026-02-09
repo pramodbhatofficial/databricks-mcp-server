@@ -23,7 +23,7 @@ pip install databricks-mcp-server
 Or install from source:
 
 ```bash
-git clone https://github.com/your-org/databricks-mcp-server.git
+git clone https://github.com/pramodbhatofficial/databricks-mcp-server.git
 cd databricks-mcp-server
 pip install -e ".[dev]"
 ```
@@ -57,9 +57,11 @@ databricks-mcp
 
 This starts the MCP server using stdio transport.
 
-### Claude Code Integration
+## Integrations
 
-Add to your Claude Code MCP settings:
+### Claude Code (Terminal)
+
+Add to `~/.claude/settings.json` or your project's `.claude/settings.json`:
 
 ```json
 {
@@ -69,6 +71,139 @@ Add to your Claude Code MCP settings:
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.databricks.com",
         "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+Then restart Claude Code. Verify with `/mcp` to see the registered tools.
+
+### Claude Desktop
+
+Add to your Claude Desktop config file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+        "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+Restart Claude Desktop. The Databricks tools will appear in the tool picker.
+
+### Cursor
+
+Add to `.cursor/mcp.json` in your project root (or `~/.cursor/mcp.json` for global):
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+        "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+Open Cursor Settings > MCP to verify the server is connected.
+
+### Windsurf
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+        "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+### VS Code (Copilot)
+
+Add to `.vscode/mcp.json` in your project:
+
+```json
+{
+  "servers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+        "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+### Zed
+
+Add to Zed's settings (`~/.config/zed/settings.json`):
+
+```json
+{
+  "context_servers": {
+    "databricks": {
+      "command": {
+        "path": "databricks-mcp",
+        "env": {
+          "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+          "DATABRICKS_TOKEN": "dapi..."
+        }
+      }
+    }
+  }
+}
+```
+
+### Any MCP Client (Generic stdio)
+
+The server uses stdio transport. Connect from any MCP-compatible client:
+
+```bash
+# Set auth env vars
+export DATABRICKS_HOST=https://your-workspace.databricks.com
+export DATABRICKS_TOKEN=dapi...
+
+# Start the server (communicates via stdin/stdout)
+databricks-mcp
+```
+
+### Tip: Load Only What You Need
+
+If your MCP client struggles with 157 tools, use selective loading to reduce the tool count:
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_HOST": "https://your-workspace.databricks.com",
+        "DATABRICKS_TOKEN": "dapi...",
+        "DATABRICKS_MCP_TOOLS_INCLUDE": "unity_catalog,sql,compute,jobs"
       }
     }
   }
