@@ -1,8 +1,12 @@
 # Databricks MCP Server
 
+[![CI](https://github.com/pramodbhatofficial/databricks-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/pramodbhatofficial/databricks-mcp-server/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+
 A comprehensive [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for Databricks, built on the official [Databricks Python SDK](https://github.com/databricks/databricks-sdk-py).
 
-Provides **257 tools** across 27 service domains, giving AI assistants full access to the Databricks platform.
+Provides **263 tools** and **8 prompt templates** across 28 service domains, giving AI assistants full access to the Databricks platform.
 
 <p align="center">
   <img src="assets/demo.gif" alt="Databricks MCP Server Demo" width="800">
@@ -28,6 +32,12 @@ Provides **257 tools** across 27 service domains, giving AI assistants full acce
 
 ```bash
 pip install databricks-mcp-server
+```
+
+Or run with Docker:
+
+```bash
+docker run -i -e DATABRICKS_HOST=... -e DATABRICKS_TOKEN=... databricks-mcp
 ```
 
 Or install from source:
@@ -203,7 +213,7 @@ databricks-mcp
 
 ### Tip: Load Only What You Need
 
-If your MCP client struggles with 157 tools, use selective loading to reduce the tool count:
+If your MCP client struggles with many tools, use selective loading to reduce the tool count:
 
 ```json
 {
@@ -251,10 +261,11 @@ If your MCP client struggles with 157 tools, use selective loading to reduce the
 | `git_credentials` | 5 | Git credential management for repos |
 | `quality_monitors` | 8 | Data quality monitoring and refreshes |
 | `command_execution` | 4 | Interactive command execution on clusters |
+| `workflows` | 5 | Composite multi-step operations (workspace status, schema setup, query preview) |
 
 ## Selective Tool Loading
 
-With 257 tools, it's recommended to load only the modules you need. This improves agent performance and tool selection accuracy.
+With 263 tools, it's recommended to load only the modules you need. This improves agent performance and tool selection accuracy.
 
 ### Role-Based Presets (Recommended)
 
@@ -327,6 +338,75 @@ databricks_tool_guide(role="ml_engineer")
 ```
 
 This returns matching modules with descriptions and usage hints, so the agent knows exactly which `databricks_*` tools to call.
+
+## MCP Prompts (Guided Workflows)
+
+The server includes 8 prompt templates that guide AI agents through multi-step Databricks workflows:
+
+| Prompt | Description |
+|--------|-------------|
+| `explore_data_catalog` | Browse Unity Catalog structure (catalogs → schemas → tables) |
+| `query_data` | Find a warehouse, execute SQL, and format results |
+| `debug_failing_job` | Investigate a failing job: status, logs, error analysis |
+| `setup_ml_experiment` | Create an MLflow experiment and configure tracking |
+| `deploy_model` | Deploy a model to a serving endpoint |
+| `setup_data_pipeline` | Create a DLT pipeline with scheduling |
+| `workspace_health_check` | Audit clusters, warehouses, jobs, and endpoints |
+| `manage_permissions` | Review and update permissions on workspace objects |
+
+Prompts appear automatically in MCP clients that support them (e.g., Claude Desktop's prompt picker).
+
+## Docker
+
+Run the MCP server in a container:
+
+```bash
+# Build
+docker build -t databricks-mcp .
+
+# Run with stdio
+docker run -i \
+  -e DATABRICKS_HOST=https://your-workspace.databricks.com \
+  -e DATABRICKS_TOKEN=dapi... \
+  databricks-mcp
+
+# Run with SSE transport
+docker run -p 8080:8080 \
+  -e DATABRICKS_HOST=https://your-workspace.databricks.com \
+  -e DATABRICKS_TOKEN=dapi... \
+  databricks-mcp --transport sse --port 8080
+
+# Run with selective modules
+docker run -i \
+  -e DATABRICKS_HOST=https://your-workspace.databricks.com \
+  -e DATABRICKS_TOKEN=dapi... \
+  -e DATABRICKS_MCP_TOOLS_INCLUDE=sql,unity_catalog \
+  databricks-mcp
+```
+
+## SSE Transport (Remote Server)
+
+The server supports SSE transport for remote connections:
+
+```bash
+# Start as SSE server
+databricks-mcp --transport sse --port 8080
+
+# Custom host/port
+databricks-mcp --transport sse --host 127.0.0.1 --port 3000
+```
+
+Connect from any MCP client that supports SSE:
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "url": "http://localhost:8080/sse"
+    }
+  }
+}
+```
 
 ## Development
 

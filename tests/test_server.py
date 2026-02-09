@@ -172,10 +172,11 @@ class TestMain:
 
         with patch.object(server_mod, "mcp", mock_mcp):
             with patch.object(server_mod, "_register_tools") as mock_register:
-                server_mod.main()
+                with patch("sys.argv", ["databricks-mcp"]):
+                    server_mod.main()
 
-                mock_register.assert_called_once()
-                mock_mcp.run.assert_called_once()
+                    mock_register.assert_called_once()
+                    mock_mcp.run.assert_called_once()
 
 
 # ---------------------------------------------------------------------------
@@ -185,9 +186,9 @@ class TestMain:
 class TestToolModulesList:
     """Verify the module registry is complete and well-formed."""
 
-    def test_all_27_modules_listed(self) -> None:
+    def test_all_28_modules_listed(self) -> None:
         server_mod = _import_server_fresh()
-        assert len(server_mod._TOOL_MODULES) == 27
+        assert len(server_mod._TOOL_MODULES) == 28
 
     def test_module_paths_match_names(self) -> None:
         """Each module path should end with the module name."""
@@ -201,7 +202,7 @@ class TestToolModulesList:
             assert path.startswith("databricks_mcp.tools.")
 
     def test_expected_modules_present(self) -> None:
-        """All 27 expected module names are present in the list."""
+        """All 28 expected module names are present in the list."""
         server_mod = _import_server_fresh()
         names = {name for name, _ in server_mod._TOOL_MODULES}
         expected = {
@@ -211,5 +212,6 @@ class TestToolModulesList:
             "experiments", "sharing", "files", "grants", "storage",
             "metastores", "online_tables", "global_init_scripts", "tokens",
             "git_credentials", "quality_monitors", "command_execution",
+            "workflows",
         }
         assert names == expected

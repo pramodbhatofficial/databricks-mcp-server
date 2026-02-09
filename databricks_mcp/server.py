@@ -44,6 +44,7 @@ _TOOL_MODULES = [
     ("git_credentials", "databricks_mcp.tools.git_credentials"),
     ("quality_monitors", "databricks_mcp.tools.quality_monitors"),
     ("command_execution", "databricks_mcp.tools.command_execution"),
+    ("workflows", "databricks_mcp.tools.workflows"),
 ]
 
 
@@ -68,11 +69,45 @@ def _register_tools() -> None:
 
     register_resources(mcp)
 
+    # Always register prompt templates
+    from databricks_mcp.prompts import register_prompts
+
+    register_prompts(mcp)
+
 
 def main() -> None:
     """Entry point for the databricks-mcp command."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Databricks MCP Server")
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse"],
+        default="stdio",
+        help="Transport protocol (default: stdio)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8080,
+        help="Port for SSE transport (default: 8080)",
+    )
+    parser.add_argument(
+        "--host",
+        default="0.0.0.0",
+        help="Host for SSE transport (default: 0.0.0.0)",
+    )
+    args = parser.parse_args()
+
     _register_tools()
-    mcp.run()
+
+    if args.transport == "sse":
+        # Configure host/port on the FastMCP settings before starting SSE
+        mcp.settings.host = args.host
+        mcp.settings.port = args.port
+        mcp.run(transport="sse")
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":
