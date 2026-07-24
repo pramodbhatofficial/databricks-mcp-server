@@ -8,7 +8,7 @@ from databricks_mcp.config import is_module_enabled
 
 mcp = FastMCP(
     "databricks",
-    description="Comprehensive MCP server for Databricks. Provides tools for Unity Catalog, SQL, "
+    instructions="Comprehensive MCP server for Databricks. Provides tools for Unity Catalog, SQL, "
     "compute, jobs, pipelines, serving endpoints, vector search, apps, Lakebase, dashboards, "
     "Genie, secrets, IAM, connections, experiments, Delta Sharing, files (DBFS & Volumes), "
     "grants, storage credentials, external locations, metastores, online tables, global init "
