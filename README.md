@@ -52,7 +52,7 @@ export DATABRICKS_HOST=https://your-workspace.databricks.com
 export DATABRICKS_TOKEN=dapi...
 ```
 
-**OAuth (M2M):**
+**OAuth (M2M -- service principal):**
 
 ```bash
 export DATABRICKS_HOST=https://your-workspace.databricks.com
@@ -60,7 +60,26 @@ export DATABRICKS_CLIENT_ID=...
 export DATABRICKS_CLIENT_SECRET=...
 ```
 
-**Other methods**: Azure AD, Databricks CLI profile, Azure Managed Identity -- all auto-detected by the SDK.
+**OAuth (U2M -- interactive browser login):**
+
+Authenticate as yourself with short-lived, auto-refreshing OAuth tokens. Log in once
+with the [Databricks CLI](https://docs.databricks.com/dev-tools/cli/install.html), which
+caches the token under a named profile in `~/.databrickscfg`:
+
+```bash
+databricks auth login --host https://your-workspace.databricks.com --profile my-profile
+```
+
+Then point the server at that profile instead of setting a token:
+
+```bash
+export DATABRICKS_CONFIG_PROFILE=my-profile
+```
+
+> **Note:** If `DATABRICKS_TOKEN` is set, the SDK uses it in preference to the profile.
+> Leave `DATABRICKS_TOKEN`/`DATABRICKS_HOST` unset when authenticating via a profile.
+
+**Other methods**: Azure AD, Azure Managed Identity -- all auto-detected by the SDK.
 
 ### Running
 
@@ -84,6 +103,22 @@ Add to `~/.claude/settings.json` or your project's `.claude/settings.json`:
       "env": {
         "DATABRICKS_HOST": "https://your-workspace.databricks.com",
         "DATABRICKS_TOKEN": "dapi..."
+      }
+    }
+  }
+}
+```
+
+To use OAuth U2M instead of a token, reference a logged-in profile (see
+[Authentication](#authentication)) and omit `DATABRICKS_HOST`/`DATABRICKS_TOKEN`:
+
+```json
+{
+  "mcpServers": {
+    "databricks": {
+      "command": "databricks-mcp",
+      "env": {
+        "DATABRICKS_CONFIG_PROFILE": "my-profile"
       }
     }
   }
