@@ -163,7 +163,7 @@ def register_tools(mcp: FastMCP) -> None:
             return format_error(e)
 
     @mcp.tool()
-    def databricks_get_run(run_id: str) -> str:
+    def databricks_get_experiment_run(run_id: str) -> str:
         """Get detailed information about a specific MLflow run.
 
         Args:
